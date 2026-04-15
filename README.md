@@ -1,10 +1,42 @@
-## Configuración de la Base de Datos
+# 🐾 PetParadise
 
-El archivo **Query_DB.sql** contiene el script necesario para crear la base de datos del proyecto.  
-Para configurarla correctamente, cada integrante del equipo debe:
+**PetParadise** es una plataforma web desarrollada en ASP.NET Core que facilita la adopción responsable de mascotas. Permite gestionar información de animales, usuarios y procesos de adopción de manera eficiente, integrando servicios modernos y buenas prácticas de desarrollo.
 
-1. Abrir **SQL Server Management Studio**.
-2. Ejecutar el archivo **Query_DB.sql** en el servidor local para que se genere la base de datos.
-3. Una vez creada la base de datos, **reemplazar la cadena de conexión** en el proyecto con la correspondiente a su entorno local.
+---
 
-> ⚠️ Es obligatorio realizar estos pasos antes de ejecutar el proyecto, de lo contrario no funcionará correctamente.
+## 🚀 Características
+
+- 🐶 Registro y gestión de mascotas
+- 👤 Gestión de usuarios
+- 📋 Proceso de adopción
+- ☁️ Integración con Azure Storage
+- 🧪 Pruebas unitarias implementadas
+- 🏗️ Arquitectura por capas (Controllers, Services, Models)
+
+---
+
+## 🛠️ Tecnologías
+
+- ASP.NET Core
+- Entity Framework Core
+- SQL Server
+- Azure Storage
+- xUnit
+
+---
+
+## ⚙️ Configuración del proyecto
+
+Antes de ejecutar el proyecto, es necesario configurar el archivo `appsettings.json`.
+
+---
+
+### 🔐 Cadena de conexión a la base de datos
+
+Debes agregar tu cadena de conexión de SQL Server en:
+
+```json
+"ConnectionStrings": {
+  "servidor": "",
+  "AzureStorage": ""
+}
