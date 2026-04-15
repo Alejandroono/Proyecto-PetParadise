@@ -1,0 +1,267 @@
+﻿@{
+    ViewBag.Title = "Inicio";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>PetParadise – Inicio</title>
+    <style>
+        /* Estilo para suavizar la transición del menú móvil */
+        #mobile-menu {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-r from-blue-500 via-slate-700 to-blue-800 min-h-screen flex flex-col text-white">
+
+    <header class="backdrop-blur-lg bg-white/10 border-b border-white/20 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex items-center justify-between py-4 px-6">
+
+            <div class="flex items-center space-x-3">
+                <img src="/asset/imagen.png" class="h-10 md:h-14" alt="Logo" />
+                <span class="text-xl md:text-2xl font-bold tracking-wide">PETPARADISE</span>
+            </div>
+
+            <button onclick="toggleMenu()" class="md:hidden text-white focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+
+            <nav class="hidden md:flex items-center space-x-6">
+                <a asp-controller="Home" asp-action="A_Cerca_DE" class="hover:text-blue-300 transition">
+                    ¿Quiénes somos?
+                </a>
+                <button onclick="abrirLogin()" class="bg-white text-blue-700 px-4 py-2 rounded-xl font-semibold hover:scale-105 hover:bg-blue-100 transition">
+                    Iniciar sesión
+                </button>
+            </nav>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 border-b border-white/10 px-6 py-4 space-y-4">
+            <a asp-controller="Home" asp-action="A_Cerca_DE" class="block hover:text-blue-300 transition text-lg">
+                ¿Quiénes somos?
+            </a>
+            <button onclick="abrirLogin()" class="w-full bg-white text-blue-700 px-4 py-3 rounded-xl font-semibold">
+                Iniciar sesión
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section>
+            <div class="max-w-7xl mx-auto px-6 py-12 md:py-20 grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center md:text-left">
+                    <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
+                        Un espacio para cuidar, amar y proteger a las mascotas
+                    </h1>
+                    <p class="mt-6 text-base md:text-lg text-gray-200">
+                        PetParadise conecta personas con mascotas para una adopción responsable,
+                        segura y llena de amor.
+                    </p>
+                    <div class="mt-8 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+                        <button onclick="abrirLogin()" class="bg-blue-400 px-6 py-3 rounded-xl font-semibold hover:bg-blue-300 transition hover:scale-105 shadow-lg">
+                            Adoptar ahora
+                        </button>
+                        <a asp-controller="Home" asp-action="A_Cerca_DE" class="border border-white px-6 py-3 rounded-xl hover:bg-white hover:text-blue-700 transition text-center">
+                            Conocer más
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex justify-center order-first md:order-last">
+                    <img src="https://cdn.pixabay.com/photo/2017/09/25/13/12/dog-2785074_1280.jpg"
+                         alt="Adopción de mascotas"
+                         class="w-full max-w-sm md:max-w-md rounded-3xl shadow-2xl hover:scale-105 transition duration-500">
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white text-gray-800 py-16">
+            <div class="max-w-7xl mx-auto text-center px-6">
+                <h2 class="text-2xl md:text-3xl font-bold mb-12">¿Por qué elegir PetParadise?</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <div class="p-6 rounded-2xl shadow-lg hover:shadow-xl transition border border-gray-100">
+                        <h3 class="text-xl font-bold text-blue-600">Adopción segura</h3>
+                        <p class="mt-3 text-gray-600">Verificamos cada mascota y refugio.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl shadow-lg hover:shadow-xl transition border border-gray-100">
+                        <h3 class="text-xl font-bold text-blue-600">Comunidad</h3>
+                        <p class="mt-3 text-gray-600">Conecta con amantes de los animales.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl shadow-lg hover:shadow-xl transition border border-gray-100 sm:col-span-2 md:col-span-1">
+                        <h3 class="text-xl font-bold text-blue-600">Seguimiento</h3>
+                        <p class="mt-3 text-gray-600">Apoyo después de la adopción.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gradient-to-r from-blue-600 to-blue-800 py-16 md:py-20 text-white">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-extrabold mb-4">¿Sabías que?</h2>
+                    <p class="text-blue-100">Información y noticias sobre el bienestar y cuidado de las mascotas.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-2xl font-bold mb-4">La adopción reduce el abandono animal</h3>
+                        <p class="text-blue-100 leading-relaxed mb-6">
+                            Adoptar una mascota no solo le da una segunda oportunidad,
+                            también contribuye a disminuir el abandono y mejora la calidad
+                            de vida de los animales.
+                        </p>
+                        <button onclick="abrirLogin()" class="bg-white text-blue-700 px-6 py-3 rounded-xl font-semibold hover:bg-blue-100 transition hover:scale-105 shadow-md">
+                            Conoce más
+                        </button>
+                    </div>
+                    <div class="flex justify-center">
+                        <img src="https://cdn.pixabay.com/photo/2017/09/25/13/12/dog-2785074_1280.jpg"
+                             alt="Sabias que"
+                             class="rounded-3xl shadow-2xl hover:scale-105 transition duration-500 max-w-xs md:max-w-md w-full">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#2F5975] text-white text-center py-6 px-4">
+        <p class="text-sm">
+            © 2025 PetParadise · Cuidando mascotas, creando hogares
+        </p>
+    </footer>
+
+    <div id="modalLogin" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-6 md:p-10 w-full max-w-lg relative overflow-y-auto max-h-[95vh]">
+
+            <button onclick="cerrarLogin()" class="absolute top-4 right-4 text-white text-xl font-bold hover:scale-110 p-2">
+                ✕
+            </button>
+
+            <div class="flex flex-col items-center mb-6">
+                <img src="/asset/imagen.png" class="h-16 md:h-20 opacity-90" alt="Logo Modal">
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-md text-gray-800">
+                @if (TempData["Exito"] != null)
+                {
+                    <div id="mensajeExito" class="bg-green-500 text-white p-4 rounded mb-4 text-center">
+                        <p class="font-semibold text-sm md:text-base">Usuario creado con éxito</p>
+                        <p class="text-xs md:text-sm mt-1">Ahora puedes iniciar sesión.</p>
+                    </div>
+                }
+
+                <div class="text-red-600 text-xs md:text-sm mb-4">
+                    @Html.ValidationSummary(false)
+                </div>
+
+                <form id="formLogin" asp-action="Index" asp-controller="Home" method="post">
+                    <label class="block font-bold text-sm">Usuario</label>
+                    <input name="Correo" type="email" required
+                           class="w-full border rounded-md px-4 py-2 mt-1 mb-4 focus:ring-2 focus:ring-blue-400 outline-none"
+                           placeholder="Ejemplo@gmail.com" />
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-bold text-slate-700">Contraseña</label>
+                        <div class="relative">
+                            <input name="Contrasena" type="password" id="passInput" required
+                                   autocomplete="new-password"
+                                   class="w-full border rounded-md px-4 py-2 mt-1 focus:ring-2 focus:ring-blue-400 outline-none pr-10"
+                                   placeholder="Ingrese su contraseña" />
+
+                            <button type="button" onclick="togglePassword()"
+                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 mt-0.5 text-slate-400 hover:text-blue-500 transition-all">
+                                <span id="eyeIcon" class="material-icons text-xl">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition font-bold">
+                        Ingresar
+                    </button>
+
+                    <div class="mt-6 space-y-2 text-center">
+                        <p class="text-xs md:text-sm text-gray-500">
+                            ¿No tienes cuenta?
+                            <a asp-controller="Usuarios" asp-action="Create" class="text-blue-600 hover:underline font-semibold">Regístrate</a>
+                        </p>
+                        <p class="text-xs md:text-sm text-gray-500">
+                            <a asp-controller="Home" asp-action="contrasena" class="text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+                function togglePassword() {
+            const input = document.getElementById('passInput');
+            const icon = document.getElementById('eyeIcon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerText = 'visibility_off'; // Cambia el ícono a ojo tachado
+            } else {
+                input.type = 'password';
+                icon.innerText = 'visibility';     // Cambia el ícono a ojo normal
+            }
+        }
+        // Funcionalidad del Menú Móvil
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function abrirLogin() {
+            const modal = document.getElementById('modalLogin');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Cerrar menú móvil si está abierto al abrir login
+            mobileMenu.classList.add('hidden');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // Evita scroll de fondo
+        }
+
+        function cerrarLogin() {
+            document.getElementById('modalLogin').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onload = function () {
+            const mensaje = document.getElementById('mensajeExito');
+            const erroresContainer = document.querySelector('.text-red-600');
+            const tieneErrores = erroresContainer && erroresContainer.innerText.trim() !== "";
+
+            if (mensaje || tieneErrores) {
+                abrirLogin();
+            }
+
+            if (mensaje) {
+                setTimeout(() => {
+                    mensaje.style.transition = 'opacity 0.5s';
+                    mensaje.style.opacity = '0';
+                    setTimeout(() => mensaje.remove(), 500);
+                }, 5000);
+            }
+        };
+
+        // Cerrar modal al hacer clic fuera del contenido blanco
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalLogin');
+            if (event.target == modal) {
+                cerrarLogin();
+            }
+        }
+    </script>
+</body>
+</html>

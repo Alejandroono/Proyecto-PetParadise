@@ -1,0 +1,104 @@
+﻿@model PETADOPCION_FINAL.Models.Usuario
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+    
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Eliminar Usuario - PetParadise</title>
+</head>
+
+<body class="bg-slate-50 min-h-screen font-sans antialiased">
+
+    @* Encabezado con tu color original #2F5975 *@
+    <header class="bg-[#2F5975] shadow-lg text-white p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span class="text-xl font-bold tracking-widest flex items-center gap-2">
+                <span class="material-icons">delete_forever</span> CONFIRMAR ELIMINACIÓN
+            </span>
+            <a asp-action="Index" class="hover:text-blue-200 text-sm font-bold uppercase flex items-center gap-1">
+                <span class="material-icons text-sm">arrow_back</span> VOLVER AL LISTADO
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto py-12 px-6">
+
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-red-100">
+
+            @* Banner de Advertencia *@
+            <div class="bg-red-600 p-8 text-white text-center">
+                <span class="material-icons text-5xl mb-2">warning</span>
+                <h2 class="text-2xl font-black uppercase leading-none">¿ESTÁS SEGURO?</h2>
+                <p class="text-red-100 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">Esta acción no se puede deshacer</p>
+            </div>
+
+            <div class="p-8 md:p-12">
+                <div class="space-y-8">
+
+                    @* Resumen del Usuario a Eliminar *@
+                    <div class="text-center pb-6 border-b border-slate-100">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">USUARIO A ELIMINAR</p>
+                        <h3 class="text-3xl font-extrabold text-slate-800">@Model.Nombre @Model.Apellido</h3>
+                        <p class="text-blue-600 font-bold">@Model.Email</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                        @* Datos clave *@
+                        <div class="bg-slate-50 p-4 rounded-xl">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">ROL ASIGNADO</p>
+                            <p class="text-[#2F5975] font-black italic">@Model.IdRolNavigation?.NombreRol</p>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">FECHA DE REGISTRO</p>
+                            <p class="text-slate-700 font-bold">
+                                @string.Format("{0:dd 'de' MMMM 'de' yyyy}", Model.FechaRegistro)
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">TELÉFONO</p>
+                            <p class="text-slate-700 font-bold">@Model.Telefono</p>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">CIUDAD</p>
+                            <p class="text-slate-700 font-bold">@Model.Ciudad</p>
+                        </div>
+                    </div>
+
+                    @* Formulario de eliminación *@
+                    <form asp-action="Delete" class="mt-10 pt-8 border-t border-slate-100">
+                        <input type="hidden" asp-for="IdUsuario" />
+
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <button type="submit"
+                                    class="flex-[2] bg-red-600 hover:bg-red-700 text-white font-black py-5 rounded-2xl shadow-xl shadow-red-100 transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                                <span class="material-icons">delete_forever</span> ELIMINAR PERMANENTEMENTE
+                            </button>
+
+                            <a asp-action="Index"
+                               class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-600 font-black py-5 rounded-2xl transition-all text-center uppercase tracking-widest text-sm flex items-center justify-center">
+                                CANCELAR
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-slate-400 text-[10px] font-bold uppercase tracking-[0.4em] mt-8 opacity-50">
+            PETPARADISE SISTEMA DE SEGURIDAD // 2026
+        </p>
+    </main>
+
+</body>
+</html>

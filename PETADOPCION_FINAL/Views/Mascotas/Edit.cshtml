@@ -1,0 +1,147 @@
+﻿@model PETADOPCION_FINAL.Models.Mascota
+
+@{
+    ViewData["Title"] = "Editar Mascota";
+    // Cálculo inicial para los cuadros de edad
+    int totalDias = Model.Edad ?? 0;
+    int anos = totalDias / 365;
+    int meses = (totalDias % 365) / 30;
+    int dias = (totalDias % 365) % 30;
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white p-3">
+            <h4 class="mb-0"><i class="fas fa-edit"></i> Editar Mascota: @Model.Nombre</h4>
+            <small>Modifica la información necesaria. Los datos de registro originales se mantendrán protegidos.</small>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @* CAMPOS OCULTOS - PROTECCIÓN DE DATOS *@
+                <input type="hidden" asp-for="IdMascota" />
+                <input type="hidden" asp-for="IdUsuarioPublicador" />
+                <input type="hidden" asp-for="FechaPublicacion" />
+                <input type="hidden" asp-for="EstadoAdopcion" />
+                @* Input que recibe el cálculo JS *@
+                <input type="hidden" asp-for="Edad" id="inputTotalDias" />
+
+                <div class="row">
+                    @* COLUMNA IZQUIERDA (7) *@
+                    <div class="col-md-7 border-end">
+                        <h5 class="text-primary mb-3">Detalles de la Mascota</h5>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Nombre" class="form-label fw-bold"></label>
+                            <input asp-for="Nombre" class="form-control" placeholder="Nombre de la mascota" required />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Tipo" class="form-label fw-bold"></label>
+                                <select asp-for="Tipo" class="form-select" required>
+                                    <option value="Perro">Perro</option>
+                                    <option value="Gato">Gato</option>
+                                  
+                                </select>
+                                <span asp-validation-for="Tipo" class="text-danger small fw-bold"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Sexo" class="form-label fw-bold"></label>
+                                <select asp-for="Sexo" class="form-select" required>
+                                    <option value="Macho">Macho</option>
+                                    <option value="Hembra">Hembra</option>
+                                </select>
+                                <span asp-validation-for="Sexo" class="text-danger small fw-bold"></span>
+                            </div>
+                        </div>
+
+                        @* EDAD DETALLADA (3 CUADROS) *@
+                        <div class="form-group mb-3 p-3 bg-light rounded border">
+                            <label class="form-label fw-bold d-block mb-2"><i class="fas fa-history"></i> Edad Detallada</label>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <label class="small fw-bold">Años:</label>
+                                    <input type="number" id="edadAnos" class="form-control" value="@anos" min="0" oninput="calcularDias()" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="small fw-bold">Meses:</label>
+                                    <input type="number" id="edadMeses" class="form-control" value="@meses" min="0" max="11" oninput="calcularDias()" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="small fw-bold">Días:</label>
+                                    <input type="number" id="edadDias" class="form-control" value="@dias" min="0" max="30" oninput="calcularDias()" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Raza" class="form-label fw-bold"></label>
+                            <input asp-for="Raza" class="form-control" placeholder="Raza o cruce" />
+                            <span asp-validation-for="Raza" class="text-danger small fw-bold"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Ubicacion" class="form-label fw-bold"></label>
+                            <input asp-for="Ubicacion" class="form-control" placeholder="Ciudad o Sector" required />
+                            <span asp-validation-for="Ubicacion" class="text-danger small fw-bold"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="EstadoSalud" class="form-label fw-bold">Estado de Salud</label>
+                            <input asp-for="EstadoSalud" class="form-control" placeholder="Ej: Vacunado, desparasitado" />
+                            <span asp-validation-for="EstadoSalud" class="text-danger small fw-bold"></span>
+                        </div>
+                    </div>
+
+                    @* COLUMNA DERECHA (5) *@
+                    <div class="col-md-5 ps-4">
+                        <h5 class="text-primary mb-3">Descripción y Estado</h5>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Descripcion" class="form-label fw-bold">Descripción / Historia</label>
+                            <textarea asp-for="Descripcion" class="form-control" rows="12" placeholder="Cuéntanos sobre su comportamiento..."></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+
+                        <div class="card bg-light border-0 shadow-sm mt-3">
+                            <div class="card-body">
+                                <label class="fw-bold text-muted small d-block mb-1">Estado de Adopción (Sistema):</label>
+                                <span class="badge bg-info text-dark fs-6">@Model.EstadoAdopcion</span>
+                                <p class="text-muted x-small mt-2 mb-0">Nota: El estado no puede ser modificado manualmente para garantizar la integridad de las solicitudes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mt-4" />
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="MisPublicaciones" class="btn btn-outline-secondary btn-lg px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-primary btn-lg px-5 shadow">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function calcularDias() {
+            const anos = parseInt(document.getElementById('edadAnos').value) || 0;
+            const meses = parseInt(document.getElementById('edadMeses').value) || 0;
+            const dias = parseInt(document.getElementById('edadDias').value) || 0;
+
+            // Calculamos el total de días para la base de datos
+            const total = (anos * 365) + (meses * 30) + dias;
+            document.getElementById('inputTotalDias').value = total;
+        }
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

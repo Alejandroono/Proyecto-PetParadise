@@ -1,0 +1,149 @@
+﻿@model IEnumerable<PETADOPCION_FINAL.Models.Noticia>
+
+@{
+    ViewData["Title"] = "Gestión de Noticias";
+   
+}
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<body class="bg-gray-50 font-sans p-4 md:p-10">
+
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black text-slate-800 tracking-tighter italic flex items-center gap-3">
+                    <span class="material-icons text-[#5CA9DD] text-4xl">list_alt</span>
+                    GESTIÓN DE NOTICIAS
+                </h2>
+                <p class="text-slate-500 font-medium uppercase text-xs tracking-[0.2em] mt-1 ml-1">Panel Administrativo de Contenidos</p>
+            </div>
+
+            <a asp-action="Create" class="flex items-center justify-center gap-2 bg-[#5CA9DD] hover:bg-blue-500 text-white font-black px-8 py-4 rounded-2xl shadow-xl shadow-blue-100 transition-all active:scale-95 uppercase text-sm tracking-widest w-full md:w-auto">
+                <span class="material-icons">add_circle</span>
+                Nueva Noticia
+            </a>
+        </div>
+
+        <div class="bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[900px]">
+                    <thead>
+                        <tr class="bg-slate-800 text-white">
+                            <th class="px-6 py-6 text-[10px] font-black uppercase tracking-widest w-32">Miniatura</th>
+                            <th class="px-6 py-6 text-[10px] font-black uppercase tracking-widest w-64">Info. Noticia</th>
+                            <th class="px-6 py-6 text-[10px] font-black uppercase tracking-widest">Contenido</th>
+                            <th class="px-6 py-6 text-[10px] font-black uppercase tracking-widest w-48">Publicado Por</th>
+                            <th class="px-6 py-6 text-[10px] font-black uppercase tracking-widest text-center w-28">Estado</th>
+                            <th class="px-6 py-6 text-[10px] font-black uppercase tracking-widest text-right w-32">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="w-20 h-14 rounded-xl overflow-hidden shadow-md border border-gray-200">
+                                        <img src="@item.ImagenUrl" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-slate-800 font-black text-sm line-clamp-1">@item.Titulo</span>
+                                        <span class="text-slate-400 text-[10px] font-bold uppercase line-clamp-1">@item.Subtitulo</span>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div class="max-w-xs">
+                                        <p class="text-slate-500 text-xs font-medium italic line-clamp-2 leading-relaxed">
+                                            @(string.IsNullOrEmpty(item.Contenido) ? "Sin contenido detallado..." : item.Contenido)
+                                        </p>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                                            <span class="material-icons text-slate-400 text-sm">person</span>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-slate-700 font-bold text-xs uppercase tracking-tighter truncate">@item.Usuario?.Nombre</span>
+                                            <span class="text-slate-400 text-[10px]">@item.FechaPublicacion?.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex justify-center items-center">
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox"
+                                                   class="sr-only peer"
+                                                   @(item.Activo ? "checked" : "")
+                                                   onclick="confirmarCambioEstado('@item.IdNoticia', this)">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#5CA9DD]"></div>
+                                        </label>
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-1">
+                                        <a asp-action="Edit" asp-route-id="@item.IdNoticia" class="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-all" title="Editar">
+                                            <span class="material-icons text-xl">edit</span>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.IdNoticia" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all" title="Eliminar">
+                                            <span class="material-icons text-xl">delete_outline</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function confirmarCambioEstado(id, checkbox) {
+            const nuevoEstado = checkbox.checked;
+            checkbox.checked = !nuevoEstado; // Revertir temporalmente hasta confirmar
+
+            const resultado = await Swal.fire({
+                title: '¿Confirmar cambio?',
+                text: nuevoEstado ? "La noticia volverá a salir en la página principal." : "La noticia dejará de mostrarse en el slider.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#5CA9DD',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Sí, cambiar',
+                cancelButtonText: 'Cancelar',
+                customClass: { popup: 'rounded-[2rem]' }
+            });
+
+            if (resultado.isConfirmed) {
+                try {
+                    const response = await fetch(`/Noticias/CambiarEstado?id=${id}&activo=${nuevoEstado}`, {
+                        method: 'POST'
+                    });
+
+                    if (response.ok) {
+                        checkbox.checked = nuevoEstado;
+                        Swal.fire({
+                            title: '¡Actualizado!',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            customClass: { popup: 'rounded-[2rem]' }
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire('Error', 'No se pudo actualizar el estado.', 'error');
+                }
+            }
+        }
+    </script>
+</body>

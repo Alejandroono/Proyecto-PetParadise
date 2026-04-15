@@ -1,0 +1,340 @@
+﻿@model IEnumerable<PETADOPCION_FINAL.Models.Mascota>
+@{
+    ViewData["Title"] = "Página Principal";
+    
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>@ViewData["Title"]</title>
+
+    <style>
+        .slider-track {
+            transition: transform 0.6s ease-in-out;
+            will-change: transform;
+        }
+
+        .slide-img {
+            min-width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sidebar-bg {
+            background-color: #5CA9DD;
+        }
+
+        .sidebar-collapsed {
+            width: 80px !important;
+        }
+
+            .sidebar-collapsed .label, .sidebar-collapsed .accordion-arrow {
+                display: none;
+            }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <div id="modalMascota" class="modal-overlay">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden relative border-t-8 border-[#82B441]">
+            <button id="closeModalMascota" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition">
+                <span class="material-icons">close</span>
+            </button>
+            <div class="p-8">
+                <h2 class="text-xl font-bold text-gray-500 mb-6 uppercase tracking-widest">Solicitud de Adopción</h2>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <img id="modalImg" src="" class="w-full md:w-72 h-72 object-cover rounded-xl shadow-lg border border-gray-100">
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 id="modalNombre" class="text-4xl font-black text-slate-800 mb-2"></h3>
+                            <div class="flex items-center gap-2 text-gray-500 mb-4 bg-gray-50 p-2 rounded-lg">
+                                <span class="material-icons text-blue-400">info</span>
+                                <span id="modalInfo" class="text-sm font-semibold"></span>
+                            </div>
+                            <p id="modalDesc" class="text-gray-600 leading-relaxed italic text-lg"></p>
+                        </div>
+
+                        <button type="button" id="btnAdoptarModal"
+                                class="mt-6 w-full bg-[#82B441] hover:bg-[#72a336] text-white font-bold py-4 px-6 rounded-xl flex justify-between items-center transition-all shadow-lg hover:shadow-xl active:scale-95">
+                            <span class="text-lg">¡Quiero Adoptar!</span>
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalNoticia" class="modal-overlay">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-3xl w-full mx-4 overflow-hidden relative border-b-8 border-[#5CA9DD] max-h-[90vh] flex flex-col">
+
+            <button onclick="cerrarModalNoticia()" class="absolute top-6 right-6 bg-white/80 backdrop-blur-md p-2 rounded-full text-slate-800 hover:bg-slate-800 hover:text-white transition-all z-20 shadow-lg">
+                <span class="material-icons">close</span>
+            </button>
+
+            <div class="overflow-y-auto flex-1">
+                <div class="flex flex-col">
+                    <div class="h-64 w-full relative shrink-0">
+                        <img id="nModalImg" src="" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent"></div>
+                    </div>
+
+                    <div class="p-8 md:p-10 -mt-10 relative bg-white rounded-t-[3rem]">
+                        <h3 id="nModalTitulo" class="text-3xl font-black text-slate-800 italic tracking-tighter mb-4"></h3>
+
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-6">
+                            <p id="nModalContenido" class="text-slate-600 leading-relaxed text-lg italic whitespace-pre-line"></p>
+                        </div>
+
+                        <div id="nModalLinkContainer">
+                            <a id="nModalLink" href="#" target="_blank" class="w-full bg-[#5CA9DD] hover:bg-blue-600 text-white font-black py-4 rounded-2xl flex justify-between items-center px-8 transition-all shadow-lg">
+                                <span class="uppercase tracking-widest text-sm">Ir a la página de la noticia</span>
+                                <span class="material-icons">open_in_new</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+        <main class="flex-1 p-8">
+            <section class="relative max-w-5xl mx-auto h-80 overflow-hidden rounded-2xl shadow-xl mb-10 group">
+                <div id="sliderTrack" class="flex h-full slider-track">
+                    @if (ViewBag.Noticias != null)
+                    {
+                        foreach (var noticia in ViewBag.Noticias)
+                        {
+                            <div class="min-w-full h-full relative cursor-pointer"
+                                 onclick="abrirModalNoticia('@noticia.Titulo?.Replace("'", "\\'")', '@Html.Raw(noticia.Contenido?.Replace("'", "\\'").Replace("\r\n", " ").Replace("\n", " "))', '@noticia.ImagenUrl', '@noticia.EnlaceUrl')">
+
+                                <img src="@noticia.ImagenUrl" class="slide-img w-full h-full object-cover" />
+
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
+                                    <h2 class="text-3xl font-black italic">@noticia.Titulo</h2>
+                                    <p class="text-gray-200 opacity-90">@noticia.Subtitulo</p>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <button id="prevBtn" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 p-2 rounded-full z-10 opacity-0 group-hover:opacity-100 transition">‹</button>
+                <button id="nextBtn" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 p-2 rounded-full z-10 opacity-0 group-hover:opacity-100 transition">›</button>
+            </section>
+
+            <div class="max-w-5xl mx-auto bg-slate-800 text-white p-8 rounded-2xl shadow-lg mb-12 relative overflow-hidden text-center">
+                <span class="material-icons absolute -left-4 -top-4 text-9xl opacity-10">format_quote</span>
+                <p class="text-xl italic font-light leading-relaxed">
+                    "No estás solo llenando un espacio en tu casa, estás sanando un corazón que olvidó lo que era ser amado. Adopta y descubre el lenguaje del amor incondicional."
+                </p>
+            </div>
+
+            <section class="max-w-5xl mx-auto">
+                <div class="flex items-center justify-between mb-8 border-b border-gray-200 pb-4">
+                    <h2 class="text-3xl font-black text-slate-800 tracking-tight italic">Mascotas destacadas</h2>
+                    <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase">Disponibles ahora</span>
+                </div>
+
+                @if (Model != null && Model.Any())
+                {
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                        @foreach (var item in Model)
+                        {
+                            int tDias = item.Edad ?? 0;
+                            int a = tDias / 365;
+                            int m = (tDias % 365) / 30;
+                            string edadTxt = a > 0 ? $"{a} años" : $"{m} meses";
+                            string fotoUrl = item.MascotaFotos?.FirstOrDefault(f => f.EsPrincipal == true)?.UrlFoto ?? "https://via.placeholder.com/400x300?text=Pet+Paradise";
+
+                            <div class="bg-white rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group border border-gray-100">
+                                <div class="relative h-60 overflow-hidden">
+                                    <img src="@fotoUrl" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black uppercase text-slate-700 shadow-sm">
+                                        @item.Raza
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    <h3 class="font-black text-2xl text-slate-800 mb-1">@item.Nombre</h3>
+                                    <p class="text-gray-400 font-medium mb-6 flex items-center gap-1">
+                                        <span class="material-icons text-sm">schedule</span> @edadTxt · @item.Tipo
+                                    </p>
+                                    <div class="flex gap-3 mt-auto">
+                                        <button class="btn-ver flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-slate-700 transition active:scale-95"
+                                                data-id=@item.IdMascota
+                                        data-nombre="@item.Nombre"
+                                                data-info="@edadTxt | @item.Raza | @item.EstadoSalud"
+                                                data-desc="@item.Descripcion"
+                                                data-img="@fotoUrl">
+                                            Ver más
+                                        </button>
+                                       <button onclick="window.location.href='@Url.Action("solicitarMascota", "SolicitudesAdopcions", new { id = item.IdMascota })'"
+        class="flex-1 bg-[#5CA9DD] text-white py-3 rounded-xl font-bold hover:bg-blue-500 transition active:scale-95 shadow-md shadow-blue-200">
+    Adoptar
+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="bg-white rounded-3xl p-20 flex flex-col items-center justify-center text-center border-2 border-dashed border-gray-200 shadow-inner">
+                        <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+                            <span class="material-icons text-gray-300 text-5xl">pets</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-400 mb-2">No hay mascotas publicadas todavía</h3>
+                        <p class="text-gray-400 max-w-sm mx-auto mb-8 font-medium">Vuelve pronto o sé tú quien le dé una oportunidad a una mascota publicándola aquí.</p>
+                        <a href="@Url.Action("Create", "Mascotas")" class="bg-blue-50 text-blue-500 px-8 py-3 rounded-full font-bold hover:bg-blue-500 hover:text-white transition-all">
+                            + Publicar mi mascota
+                        </a>
+                    </div>
+                }
+            </section>
+        </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const wrapper = document.getElementById('mainWrapper');
+            const modMascota = document.getElementById('modalMascota');
+            const modNoticia = document.getElementById('modalNoticia');
+
+            // --- TOGGLE SIDEBAR ---
+            document.getElementById('btnToggleSidebar').onclick = () => {
+                sidebar.classList.toggle('sidebar-collapsed');
+                if(sidebar.classList.contains('sidebar-collapsed')){
+                    wrapper.style.marginLeft = "80px";
+                } else {
+                    wrapper.style.marginLeft = "256px";
+                }
+            };
+
+            // --- ACCORDION ---
+            document.querySelectorAll('.accordion-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const targetId = btn.getAttribute('data-target');
+                    if(targetId){
+                        const target = document.getElementById(targetId);
+                        target.classList.toggle('hidden');
+                        btn.querySelector('.accordion-arrow').classList.toggle('rotate-90');
+                    }
+                };
+            });
+
+            // --- SLIDER AUTOMÁTICO ---
+            let slideIdx = 0;
+            const track = document.getElementById('sliderTrack');
+            if(track && track.children.length > 0){
+                const moveSlider = () => {
+                    slideIdx = (slideIdx + 1) % track.children.length;
+                    track.style.transform = `translateX(-${slideIdx * 100}%)`;
+                };
+                let interval = setInterval(moveSlider, 5000);
+
+                document.getElementById('nextBtn').onclick = () => {
+                    clearInterval(interval);
+                    moveSlider();
+                    interval = setInterval(moveSlider, 5000);
+                };
+                document.getElementById('prevBtn').onclick = () => {
+                    clearInterval(interval);
+                    slideIdx = (slideIdx - 1 + track.children.length) % track.children.length;
+                    track.style.transform = `translateX(-${slideIdx * 100}%)`;
+                    interval = setInterval(moveSlider, 5000);
+                };
+            }
+
+            // --- MODAL MASCOTA DINÁMICO ---
+                 // --- MODAL MASCOTA DINÁMICO ---
+        const mNombre = document.getElementById('modalNombre');
+        const mImg = document.getElementById('modalImg');
+        const mInfo = document.getElementById('modalInfo');
+        const mDesc = document.getElementById('modalDesc');
+        const btnAdoptarModal = document.getElementById('btnAdoptarModal'); // Nueva referencia
+
+        document.querySelectorAll('.btn-ver').forEach(btn => {
+            btn.onclick = () => {
+                // Llenar datos básicos
+                mNombre.innerText = btn.dataset.nombre;
+                mImg.src = btn.dataset.img;
+                mInfo.innerText = btn.dataset.info;
+                mDesc.innerText = btn.dataset.desc ? `"${btn.dataset.desc}"` : "Esta mascota busca un hogar responsable lleno de cariño.";
+
+                // ACTUALIZAR EL ID EN EL BOTÓN DE ADOPTAR
+                const idMascota = btn.dataset.id;
+                btnAdoptarModal.onclick = () => {
+                    window.location.href = `/SolicitudesAdopcions/solicitarMascota?id=${idMascota}`;
+                };
+
+                modMascota.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+        });
+
+            // --- NUEVAS FUNCIONES MODAL NOTICIA ---
+            window.abrirModalNoticia = (titulo, contenido, imagen, link) => {
+                document.getElementById('nModalTitulo').innerText = titulo;
+                document.getElementById('nModalContenido').innerText = contenido || "Sin contenido detallado.";
+                document.getElementById('nModalImg').src = imagen;
+                const btnLink = document.getElementById('nModalLink');
+                if (link && link !== "" && link !== "#") {
+                    btnLink.href = link;
+                    document.getElementById('nModalLinkContainer').style.display = 'block';
+                } else {
+                    document.getElementById('nModalLinkContainer').style.display = 'none';
+                }
+                modNoticia.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+
+            window.cerrarModalNoticia = () => {
+                modNoticia.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            };
+
+            // Cerrar modales al hacer click fuera
+            window.onclick = (e) => {
+                if(e.target === modMascota) {
+                    modMascota.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+                if(e.target === modNoticia) {
+                    modNoticia.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            };
+        });
+    </script>
+</body>
+</html>

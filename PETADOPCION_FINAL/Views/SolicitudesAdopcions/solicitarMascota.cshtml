@@ -1,0 +1,231 @@
+﻿@{
+    ViewData["Title"] = "Solicitud de Adopción";
+   
+
+    // Recuperamos los objetos del ViewBag pasados por el Controller
+    var mascota = ViewBag.Mascota as PETADOPCION_FINAL.Models.Mascota;
+    var usuario = ViewBag.Usuario as PETADOPCION_FINAL.Models.Usuario;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>@ViewData["Title"]</title>
+    <style>
+        .btn-outline-primary {
+            color: #0d6efd;
+            background-color: transparent;
+        }
+            /* Efecto visual al pasar el mouse */
+            .btn-outline-primary:hover {
+                background-color: #9FA1A6;
+                border-radius: 40px;
+                color: white;
+            }
+        .sidebar-bg {
+            background-color: #5CA9DD;
+        }
+
+        .sidebar-collapsed {
+            width: 80px !important;
+        }
+
+            .sidebar-collapsed .label, .sidebar-collapsed .accordion-arrow {
+                display: none;
+            }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+  
+   
+
+        <main class="flex-1 p-8">
+            <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold mb-8 border-b pb-4 text-[#5CA9DD]">Formulario Completo de Solicitud</h2>
+
+                <form id="formAdopcion" action="/SolicitudesAdopcions/Registrar" method="post" enctype="multipart/form-data">
+
+                    <input type="hidden" name="idMascota" value="@mascota?.IdMascota" />
+                    <input type="hidden" name="idUsuario" value="@usuario?.IdUsuario" />
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-slate-700 uppercase border-b pb-2">Información Total Mascota</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500">Nombre</label>
+                                    <input type="text" readonly value="@mascota?.Nombre" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500">Edad</label>
+                                    <input type="text" readonly value="@ViewBag.EdadFormateada" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500">Raza</label>
+                                    <input type="text" readonly value="@mascota?.Raza" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500">Sexo</label>
+                                    <input type="text" readonly value="@mascota?.Sexo" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500">Estado de Salud</label>
+                                    <input type="text" readonly value="@mascota?.EstadoSalud" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500">Descripción completa</label>
+                                    <textarea readonly class="w-full p-2 bg-gray-100 border rounded text-xs outline-none" rows="3">@mascota?.Descripcion</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-slate-700 uppercase border-b pb-2">Datos del Solicitante</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500">Nombre Completo</label>
+                                    <input type="text" readonly value="@usuario?.Nombre" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500">Teléfono</label>
+                                    <input type="text" readonly value="@usuario?.Telefono" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500">Correo Electrónico</label>
+                                    <input type="text" readonly value="@usuario?.Email" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-bold text-slate-500">Dirección</label>
+                                    <input type="text" readonly value="@usuario?.Direccion" class="w-full p-2 bg-gray-100 border rounded outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 md:col-span-2 space-y-6 pt-4">
+                            <h3 class="font-bold text-slate-700 uppercase border-b pb-2">Información adicional y Documentos (PDF)</h3>
+
+                            <textarea name="mensaje" rows="4" required placeholder="Escribe aquí tu motivación para adoptar a esta mascota..."
+                                      class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#5CA9DD] outline-none transition-all"></textarea>
+                            <div class="mb-4">
+                                <a href="https://archivospetadopcion.blob.core.windows.net/formulario/Formulario_adopcion.pdf"
+                                   download="Formulario_Adopcion_PetParadise.pdf"
+                                   class="btn btn-outline-primary btn-sm rounded-pill fw-bold px-4 shadow-sm">
+                                    <i class="fas fa-file-download me-2"></i> Descargar Formulario de Adopción (PDF)
+                                </a>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-dashed border-slate-300">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-tighter">Formulario De Adopcion Diligenciado</label>
+                                    <input type="file" name="pdfFormulario" id="pdfFormulario" accept=".pdf" required
+                                           class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#5CA9DD] file:text-white hover:file:bg-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-tighter">Cédula de Ciudadanía (PDF)</label>
+                                    <input type="file" name="pdfCedula" id="pdfCedula" accept=".pdf" required
+                                           class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#5CA9DD] file:text-white hover:file:bg-blue-600">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-tighter">Recibo Público Hogar (PDF)</label>
+                                    <input type="file" name="pdfRecibo" id="pdfRecibo" accept=".pdf" required
+                                           class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-[#5CA9DD] file:text-white hover:file:bg-blue-600">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
+                        <button type="submit" id="btnEnviar" class="px-12 py-4 bg-[#82B441] text-white font-black rounded-2xl hover:bg-[#72a336] transition-all active:scale-95 shadow-xl uppercase tracking-widest">
+                            Enviar Solicitud
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+   
+
+    <script>
+        // Lógica Sidebar
+        document.getElementById('btnToggleSidebar').onclick = () => {
+            const sidebar = document.getElementById('sidebar');
+            const wrapper = document.getElementById('mainWrapper');
+            sidebar.classList.toggle('sidebar-collapsed');
+            if(sidebar.classList.contains('sidebar-collapsed')){
+                wrapper.style.marginLeft = "80px";
+            } else {
+                wrapper.style.marginLeft = "256px";
+            }
+        };
+
+        // Lógica de Envío con SweetAlert2
+        document.getElementById('formAdopcion').onsubmit = async function(e) {
+            e.preventDefault();
+
+            // 1. Mostrar alerta de "Procesando"
+            Swal.fire({
+                title: 'Enviando Solicitud',
+                text: 'Subiendo documentos y enviando correo...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const formData = new FormData(this);
+
+            try {
+                // 2. Enviar datos al controlador mediante Fetch
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 3. Alerta de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: result.message,
+                        confirmButtonColor: '#82B441'
+                    }).then(() => {
+                        // Redirigir al inicio después de aceptar
+                        window.location.href = '/';
+                    });
+                } else {
+                    // 4. Alerta de error (por si falla Azure o el Email)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'No se pudo contactar con el servidor.'
+                });
+            }
+        };
+
+        // Validación estricta de PDFs (mantenida de tu código)
+        function validarPDF(input) {
+            const file = input.files[0];
+            if (file && file.type !== "application/pdf") {
+                Swal.fire('Formato incorrecto', 'Solo se permiten archivos en formato PDF.', 'warning');
+                input.value = "";
+            }
+        }
+
+        document.getElementById('pdfCedula').onchange = function() { validarPDF(this); };
+        document.getElementById('pdfRecibo').onchange = function() { validarPDF(this); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    // Verificamos si la variable de sesión existe
+    // CAMBIA "UsuarioId" por el nombre exacto que guardas en tu Login
+    var sesionIniciada = Context.Session.GetString("IdUsuario");
+
+    if (string.IsNullOrEmpty(sesionIniciada))
+    {
+        // Si no hay sesión, mandamos al Login por JavaScript (Falla de seguridad mínima pero funcional)
+        <script>
+            window.location.href = '@Url.Action("Index", "Home")';
+        </script>
+    }
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Pet Paradise</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .sidebar-bg {
+            background-color: #5CA9DD;
+        }
+
+        .sidebar-collapsed {
+            width: 80px !important;
+        }
+
+            .sidebar-collapsed .label, .sidebar-collapsed .accordion-arrow {
+                display: none;
+            }
+
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+
+        #mainWrapper {
+            transition: all 0.3s ease;
+        }
+
+        /* Ajuste para que el contenido no quede debajo del Nav */
+        .content-area {
+            min-height: calc(100vh - 4rem);
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <nav class="fixed top-0 left-0 right-0 bg-slate-800 text-white z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <button id="btnToggleSidebar" class="p-2 hover:bg-slate-700 rounded-full transition">
+                    <span class="material-icons">menu</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <span class="material-icons text-blue-400">pets</span>
+                    <h1 class="font-black text-xl tracking-tighter uppercase">Pet Paradise</h1>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span class="hidden sm:block text-sm font-medium text-gray-400">@Context.Session.GetString("UsuarioLogueado")</span>
+                <button class="p-1 border-2 border-slate-600 rounded-full hover:border-blue-400 transition">
+                    <span class="material-icons">account_circle</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mainWrapper" class="flex pt-16 ml-64">
+        <aside id="sidebar" class="fixed left-0 top-16 sidebar-bg text-white w-64 h-[calc(100vh-4rem)] shadow-2xl transition-all duration-300 z-40">
+            <div class="p-4 flex flex-col h-full">
+                <div class="px-4 py-2 font-black text-sm uppercase opacity-60 label mb-2">Menú Principal</div>
+
+                <div class="space-y-1">
+                    <div class="border-b border-white/10 pb-1">
+                        <a href="@Url.Action("Index", "Home")" class="w-full flex items-center gap-4 px-4 py-3 hover:bg-white/10 rounded-lg transition">
+                            <span class="material-icons">house</span>
+                            <span class="label font-semibold">Inicio</span>
+                        </a>
+                    </div>
+
+                    <div class="border-b border-white/10 pb-1">
+                        <button class="accordion-btn w-full flex items-center gap-4 px-4 py-3 hover:bg-white/10 rounded-lg transition" data-target="menuAdopcion">
+                            <span class="material-icons">favorite</span>
+                            <span class="label font-semibold">Adopción</span>
+                            <span class="ml-auto material-icons accordion-arrow text-sm">chevron_right</span>
+                        </button>
+                        <div id="menuAdopcion" class="accordion-content hidden bg-black/10 rounded-lg mt-1">
+                     
+                            <a href="@Url.Action("MisSolicitudesEnviadas", "SolicitudesAdopcions")" class="block px-12 py-2 text-sm hover:text-blue-200 italic">Mis Solicitudes</a>
+                        </div>
+                    </div>
+
+                    <div class="border-b border-white/10 pb-1">
+                        <button class="accordion-btn w-full flex items-center gap-4 px-4 py-3 hover:bg-white/10 rounded-lg transition" data-target="menuMascotas">
+                            <span class="material-icons">pets</span>
+                            <span class="label font-semibold">Mascotas</span>
+                            <span class="ml-auto material-icons accordion-arrow text-sm">chevron_right</span>
+                        </button>
+                        <div id="menuMascotas" class="accordion-content hidden bg-black/10 rounded-lg mt-1">
+                            <a href="@Url.Action("Create", "Mascotas")" class="block px-12 py-2 text-sm hover:text-blue-200 italic">Publicar Mascota</a>
+                            <a href="@Url.Action("MisPublicaciones", "Mascotas")" class="block px-12 py-2 text-sm hover:text-blue-200 italic">Mis Publicaciones</a>
+                            <a href="@Url.Action("MisSolicitudes", "SolicitudesAdopcions")" class="block px-12 py-2 text-sm hover:text-blue-200 italic">Solicitudes Recibidas</a>
+                            <a href="@Url.Action("Index", "Adopciones")" class="block px-12 py-2 text-sm hover:text-blue-200 italic">Adopciones Finalizadas</a>
+                        </div>
+                    </div>
+
+                    @if (Context.Session.GetInt32("Rol") == 1)
+                    {
+                        <div class="pt-4 px-4 py-2 font-black text-[10px] uppercase opacity-60 label">Administración</div>
+                        <a href="@Url.Action("Index", "Usuarios")" class="flex items-center gap-4 px-4 py-3 hover:bg-white/10 rounded-lg transition">
+                            <span class="material-icons text-yellow-300">manage_accounts</span>
+                            <span class="label font-semibold italic">Gestión Usuarios</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Mascotas")" class="flex items-center gap-4 px-4 py-3 hover:bg-white/10 rounded-lg transition">
+                            <span class="material-icons text-yellow-300">list_alt</span>
+                            <span class="label font-semibold italic">Listar Mascotas</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Noticias")" class="flex items-center gap-4 px-4 py-3 hover:bg-white/10 rounded-lg transition">
+                            <span class="material-icons text-yellow-300">newspaper</span>
+                            <span class="label font-semibold italic">Listar Noticias</span>
+                        </a>
+                    }
+                </div>
+
+                <div class="mt-auto">
+                    <a href="@Url.Action("Salir", "Home")" class="flex items-center gap-4 px-4 py-3 bg-slate-900/40 hover:bg-red-500 rounded-xl transition-all group">
+                        <span class="material-icons group-hover:rotate-180 transition-transform">logout</span>
+                        <span class="label font-bold">Cerrar Sesión</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-8 content-area">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const wrapper = document.getElementById('mainWrapper');
+
+            // --- TOGGLE SIDEBAR ---
+            document.getElementById('btnToggleSidebar').onclick = () => {
+                sidebar.classList.toggle('sidebar-collapsed');
+                wrapper.style.marginLeft = sidebar.classList.contains('sidebar-collapsed') ? "80px" : "256px";
+            };
+
+            // --- ACCORDION ---
+            document.querySelectorAll('.accordion-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const targetId = btn.getAttribute('data-target');
+                    if(targetId){
+                        const target = document.getElementById(targetId);
+                        target.classList.toggle('hidden');
+                        btn.querySelector('.accordion-arrow').classList.toggle('rotate-90');
+                    }
+                };
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        // Si el usuario intenta volver atrás, esto recarga la página
+        window.onpageshow = function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+    </script>
+</body>
+</html>

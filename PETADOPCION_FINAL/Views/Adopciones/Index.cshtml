@@ -1,0 +1,175 @@
+﻿@model IEnumerable<PETADOPCION_FINAL.Models.Adopcione>
+
+@{
+    ViewData["Title"] = "Adopciones Finalizadas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-end mb-3 border-bottom pb-3">
+        <div>
+            <h2 class="fw-bold text-dark mb-0">
+                <i class="fas fa-certificate text-primary me-2"></i>Adopciones Finalizadas
+            </h2>
+            <p class="text-muted mb-0 small">Historial de mascotas que entregaste en un nuevo hogar.</p>
+        </div>
+        <div class="badge bg-primary px-3 py-2 rounded-pill shadow-sm">
+            <i class="fas fa-heart me-1"></i> <span id="contadorVivos">@Model.Count()</span> Casos de Éxito
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; background-color: #f8f9fa;">
+            <div class="card-body py-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-muted">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" id="inputBusqueda" class="form-control border-start-0"
+                                   placeholder="Filtrar por nombre de mascota...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="contenedorTarjetas">
+            @foreach (var item in Model)
+            {
+                <div class="col-12 mb-4 tarjeta-adopcion" data-nombre="@item.IdMascotaNavigation.Nombre.ToLower()">
+                    <div class="card shadow-sm border-0" style="border-radius: 12px; border-left: 6px solid #0d6efd !important;">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-3 border-end">
+                                    @{
+                                        var foto = item.IdMascotaNavigation.MascotaFotos.FirstOrDefault(f => f.EsPrincipal == true)?.UrlFoto
+                                        ?? item.IdMascotaNavigation.MascotaFotos.FirstOrDefault()?.UrlFoto;
+                                    }
+                                    <img src="@(string.IsNullOrEmpty(foto) ? "/images/default-pet.png" : foto)"
+                                         class="rounded-3 mb-2 w-100 object-fit-cover shadow-sm" style="height: 140px;">
+                                    <h5 class="fw-bold text-primary mb-1">@item.IdMascotaNavigation.Nombre</h5>
+                                    <p class="text-secondary mb-0 small">@item.IdMascotaNavigation.Raza</p>
+                                </div>
+
+                                <div class="col-md-4 border-end ps-md-4">
+                                    <h6 class="text-uppercase text-primary small fw-bold mb-3">Adoptante Responsable</h6>
+                                    <p class="mb-1 fw-bold text-dark">@item.IdAdoptanteNavigation.Nombre</p>
+                                    <p class="mb-1 small text-muted">@item.IdAdoptanteNavigation.Email</p>
+                                    <p class="mb-3 small text-muted"><i class="fas fa-phone-alt me-2 text-primary"></i> @item.IdAdoptanteNavigation.Telefono</p>
+                                    <div class="bg-light p-2 rounded-2 border text-center">
+                                        <small class="text-muted d-block">FECHA ENTREGA</small>
+                                        <span class="fw-bold">@item.FechaAdopcion?.ToString("dd/MM/yyyy")</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 ps-md-4">
+                                    <h6 class="text-uppercase text-primary small fw-bold mb-3">Documentación Evaluada</h6>
+                                    <div class="d-flex flex-column gap-2">
+                                        @{
+                                            var doc = item.IdAdoptanteNavigation.DocumentosUsuarios.OrderByDescending(d => d.FechaSubida).FirstOrDefault();
+                                        }
+
+                                        @if (doc != null)
+                                        {
+                                            <a href="@doc.UrlArchivo" target="_blank" class="btn btn-sm btn-outline-primary d-flex justify-content-between align-items-center py-2 px-3">
+                                                <span><i class="fas fa-id-card me-2"></i> Ver Cédula de Identidad</span>
+                                                <i class="fas fa-external-link-alt small opacity-50"></i>
+                                            </a>
+
+                                            @if (!string.IsNullOrEmpty(doc.UrlRecibo))
+                                            {
+                                                <a href="@doc.UrlRecibo" target="_blank" class="btn btn-sm btn-outline-secondary d-flex justify-content-between align-items-center py-2 px-3">
+                                                    <span><i class="fas fa-file-invoice-dollar me-2"></i> Ver Recibo Servicio</span>
+                                                    <i class="fas fa-external-link-alt small opacity-50"></i>
+                                                </a>
+                                            }
+                                            @if (!string.IsNullOrEmpty(doc.UrlFormulario))
+                                            {
+                                                <a href="@doc.UrlFormulario" target="_blank" class="btn btn-sm btn-outline-secondary d-flex justify-content-between align-items-center py-2 px-3">
+                                                    <span><i class="fas fa-file-alt me-2"></i> Ver Formulario Adopción</span>
+                                                    <i class="fas fa-external-link-alt small opacity-50"></i>
+                                                </a>
+                                            }
+                                            <small class="text-success fw-bold mt-1" style="font-size: 0.7rem;">
+                                                <i class="fas fa-check-circle me-1"></i>Documentos Verificados
+                                            </small>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-center py-3 border rounded-3 bg-light border-dashed">
+                                                <p class="text-muted small mb-0">Sin documentos cargados.</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 mt-4">
+            <div class="card shadow-sm border-0 p-5" style="border-radius: 15px;">
+                <div class="mb-4">
+                    <i class="fas fa-paw fa-4x text-muted opacity-25"></i>
+                </div>
+                <h3 class="fw-bold text-secondary">No hay adopciones finalizadas</h3>
+                <p class="text-muted mx-auto" style="max-width: 400px;">
+                    Aún no has completado el proceso de entrega de ninguna mascota.
+                    Cuando finalices una solicitud, aparecerá en este historial.
+                </p>
+                <div class="mt-3">
+                    <a href="/" class="btn btn-primary px-4 rounded-pill">
+                        <i class="fas fa-home me-2"></i>Ir al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Verificamos si el input existe antes de asignar el evento (por si está oculto en modo vacío)
+        const inputBusqueda = document.getElementById('inputBusqueda');
+        if (inputBusqueda) {
+            inputBusqueda.addEventListener('keyup', function () {
+                let filtro = this.value.toLowerCase();
+                let tarjetas = document.querySelectorAll('.tarjeta-adopcion');
+                let visibles = 0;
+                tarjetas.forEach(t => {
+                    if (t.getAttribute('data-nombre').includes(filtro)) {
+                        t.style.display = ""; visibles++;
+                    } else {
+                        t.style.display = "none";
+                    }
+                });
+                document.getElementById('contadorVivos').innerText = visibles;
+            });
+        }
+    </script>
+}
+
+<style>
+    .object-fit-cover {
+        object-fit: cover;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important;
+        }
+
+    .border-dashed {
+        border-style: dashed !important;
+    }
+</style>

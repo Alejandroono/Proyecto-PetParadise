@@ -1,0 +1,80 @@
+﻿@model PETADOPCION_FINAL.Models.Mascota
+
+@{
+    ViewData["Title"] = "Eliminar Mascota";
+
+    // Cálculo de edad para mostrarla correctamente antes de borrar
+    int totalDias = Model.Edad ?? 0;
+    int anos = totalDias / 365;
+    int meses = (totalDias % 365) / 30;
+    int dias = (totalDias % 365) % 30;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                @* Encabezado de Advertencia *@
+                <div class="card-header bg-danger text-white p-4 text-center">
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                    <h3 class="mb-0">¿Estás seguro de eliminar esto?</h3>
+                    <p class="mb-0 opacity-75">Esta acción no se puede deshacer y eliminará todos los registros asociados a @Model.Nombre.</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <h5 class="text-secondary border-bottom pb-2 mb-4">Resumen de la Mascota</h5>
+
+                    <div class="row g-3">
+                        @* Datos principales en etiquetas *@
+                        <div class="col-md-6">
+                            <p class="mb-1 fw-bold text-muted small text-uppercase">Nombre</p>
+                            <p class="fs-5 text-dark">@Model.Nombre</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1 fw-bold text-muted small text-uppercase">Edad</p>
+                            <p class="fs-5 text-dark">
+                                @(anos > 0 ? anos + "A " : "") @(meses > 0 ? meses + "M " : "") @dias d
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1 fw-bold text-muted small text-uppercase">Tipo</p>
+                            <p class="text-dark">@Model.Tipo</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1 fw-bold text-muted small text-uppercase">Raza</p>
+                            <p class="text-dark">@Model.Raza</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1 fw-bold text-muted small text-uppercase">Estado</p>
+                            <span class="badge bg-warning text-dark">@Model.EstadoAdopcion</span>
+                        </div>
+                    </div>
+
+                    @* Alerta visual extra *@
+                    <div class="alert alert-light border mt-4 mb-0">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-info-circle text-danger me-3 fa-2x"></i>
+                            <span class="text-muted small">
+                                Al confirmar, la mascota <strong>@Model.Nombre</strong> será removida permanentemente de la lista de adopciones y de tu perfil.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                @* Acciones del Formulario *@
+                <div class="card-footer bg-light p-4 d-flex justify-content-between align-items-center">
+                    <button type="button" onclick="history.back()" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-arrow-left"></i> Cancelar
+                    </button>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="IdMascota" />
+                        <button type="submit" class="btn btn-danger btn-lg px-5 shadow">
+                            <i class="fas fa-trash-alt"></i> Eliminar Permanentemente
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

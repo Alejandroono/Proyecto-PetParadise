@@ -1,0 +1,249 @@
+﻿@model IEnumerable<PETADOPCION_FINAL.Models.SolicitudesAdopcion>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+<div class="container-fluid mt-4 px-md-5">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-primary text-white p-4" style="background-color: #5CA9DD !important;">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h3 class="fw-bold mb-0">🐾 Panel de Solicitudes</h3>
+                    <p class="mb-0 opacity-75">Gestiona los interesados en tus peludos.</p>
+                </div>
+                <div class="mt-2 mt-md-0">
+                    <span class="badge bg-white text-primary fs-5 px-3 py-2 shadow-sm" style="color: #5CA9DD !important;">
+                        @Model.Count(x => x.Estado == "Pendiente" || string.IsNullOrEmpty(x.Estado)) Pendientes
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="text-center py-5 px-4 bg-light">
+                    <div class="mb-3 text-muted opacity-50">
+                        <i class="fas fa-inbox fa-4x"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark">Tu bandeja de entrada está descansando</h4>
+                    <p class="text-muted mx-auto mb-4" style="max-width: 550px;">
+                        Aún no has recibido solicitudes de adopción.
+                    </p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="@Url.Action("Index", "Mascotas")" class="btn btn-primary rounded-pill px-4" style="background-color: #5CA9DD; border: none;">Ver mis mascotas</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="p-3 bg-light border-bottom">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="input-group shadow-sm rounded-pill overflow-hidden">
+                                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" id="filtroMascota" class="form-control border-start-0" placeholder="Filtrar por nombre de mascota...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tablaSolicitudes">
+                        <thead class="bg-light text-muted small text-uppercase">
+                            <tr>
+                                <th class="ps-4">Mascota</th>
+                                <th>Interesado</th>
+                                <th class="d-none d-lg-table-cell">Mensaje</th>
+                                <th>Documentos</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="fila-solicitud border-bottom">
+                                    <td class="ps-4">
+                                        <span class="badge rounded-pill shadow-sm nombre-mascota"
+                                              style="background-color: #0dcaf0; color: #000; font-weight: 800; padding: 10px 15px;">
+                                            @item.IdMascotaNavigation.Nombre.ToUpper()
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-bold text-dark fs-5">@item.IdUsuarioSolicitanteNavigation.Nombre @item.IdUsuarioSolicitanteNavigation.Apellido</span>
+                                            <span class="text-muted small"><i class="fas fa-envelope me-1"></i>@item.IdUsuarioSolicitanteNavigation.Email</span>
+                                            <span class="text-primary small fw-bold" style="color: #5CA9DD !important;"><i class="fas fa-phone me-1"></i>@item.IdUsuarioSolicitanteNavigation.Telefono</span>
+                                        </div>
+                                    </td>
+
+                                    <td class="d-none d-lg-table-cell">
+                                        <div class="text-muted small" style="max-width: 200px; white-space: normal; font-style: italic;">
+                                            "@item.Mensaje"
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="btn-group-vertical btn-group-sm">
+                                            <a href="@Url.Action("VerDocumento", "SolicitudesAdopcions", new { idUsuario = item.IdUsuarioSolicitante, queArchivo = "cedula" })"
+                                               target="_blank" class="btn btn-outline-danger mb-1 rounded">Cédula</a>
+                                            <a href="@Url.Action("VerDocumento", "SolicitudesAdopcions", new { idUsuario = item.IdUsuarioSolicitante, queArchivo = "recibo" })"
+                                               target="_blank" class="btn btn-outline-primary rounded">Recibo</a>
+                                            <a href="@Url.Action("VerDocumento", "SolicitudesAdopcions", new { idUsuario = item.IdUsuarioSolicitante, queArchivo = "formulario" })"
+                                               target="_blank" class="btn btn-outline-primary rounded">Formulario De Adopción</a>
+                                        </div>
+                                    </td>
+
+                                    <td class="text-center pe-4" style="min-width: 180px;">
+                                        @if (string.IsNullOrEmpty(item.Estado) || item.Estado == "Pendiente")
+                                        {
+                                            <div class="d-grid gap-2">
+                                                <button type="button"
+                                                        onclick="procesarSolicitud(@item.IdSolicitud, 'Aceptar', '@item.IdMascotaNavigation.Nombre')"
+                                                        class="btn btn-success btn-sm rounded-pill fw-bold shadow-sm py-2">
+                                                    <i class="fas fa-check-circle me-1"></i> Aceptar
+                                                </button>
+                                                <button type="button"
+                                                        onclick="procesarSolicitud(@item.IdSolicitud, 'Rechazar', '@item.IdMascotaNavigation.Nombre')"
+                                                        class="btn btn-outline-secondary btn-sm rounded-pill py-2">
+                                                    <i class="fas fa-times-circle me-1"></i> Rechazar
+                                                </button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="text-center">
+                                                <span class="badge @(item.Estado == "Aprobada" ? "bg-success" : "bg-danger") px-3 py-2 rounded-pill shadow-sm w-100 mb-1">
+                                                    <i class="fas @(item.Estado == "Aprobada" ? "fa-heart" : "fa-ban") me-1"></i>
+                                                    @item.Estado.ToUpper()
+                                                </span>
+
+                                                @if (item.Estado == "Aprobada")
+                                                {
+                                                    @* BOTÓN CORREGIDO: Ahora es un botón funcional *@
+                                                    <button type="button"
+                                                            onclick="confirmarAdopcionFinal(@item.IdSolicitud, '@item.IdMascotaNavigation.Nombre')"
+                                                            class="btn btn-sm px-3 py-2 rounded-pill shadow-sm w-100 mb-1 fw-bold text-white border-0"
+                                                            style="background-color: #5CA9DD !important;">
+                                                        <i class="fas fa-home me-1"></i> Confirmar Adopción
+                                                    </button>
+                                                }
+
+                                                <button type="button"
+                                                        onclick="procesarSolicitud(@item.IdSolicitud, 'Restablecer', '@item.IdMascotaNavigation.Nombre')"
+                                                        class="btn btn-link btn-sm text-muted text-decoration-none" style="font-size: 0.75rem;">
+                                                    <i class="fas fa-undo"></i> Cambiar decisión
+                                                </button>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 1. Filtrado
+        document.getElementById('filtroMascota')?.addEventListener('keyup', function () {
+            let filtro = this.value.toUpperCase();
+            let filas = document.querySelectorAll('.fila-solicitud');
+            filas.forEach(fila => {
+                let nombreMascota = fila.querySelector('.nombre-mascota').textContent.toUpperCase();
+                fila.style.display = nombreMascota.includes(filtro) ? "" : "none";
+            });
+        });
+
+        // 2. Lógica de Aceptar/Rechazar/Restablecer
+        function procesarSolicitud(id, accion, mascotaNombre) {
+            let config = {
+                'Aceptar': { icon: 'question', color: '#198754', btn: '¡Sí, aceptar!' },
+                'Rechazar': { icon: 'warning', color: '#dc3545', btn: 'Sí, rechazar' },
+                'Restablecer': { icon: 'info', color: '#6c757d', btn: 'Sí, restablecer' }
+            };
+
+            const sel = config[accion];
+
+            Swal.fire({
+                title: `<strong>${accion.toUpperCase()}</strong>`,
+                icon: sel.icon,
+                html: `¿Estás seguro de que deseas <b>${accion.toLowerCase()}</b> la solicitud para <b>${mascotaNombre}</b>?`,
+                showCancelButton: true,
+                confirmButtonColor: sel.color,
+                cancelButtonColor: '#adb5bd',
+                confirmButtonText: sel.btn,
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Procesando...', didOpen: () => { Swal.showLoading(); } });
+
+                    $.ajax({
+                        url: '@Url.Action("ProcesarSolicitud", "SolicitudesAdopcions")',
+                        type: 'POST',
+                        data: { idSolicitud: id, accion: accion },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Listo!',
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => { location.reload(); });
+                            } else {
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: () => { Swal.fire('Error', 'Error de comunicación', 'error'); }
+                    });
+                }
+            });
+        }
+
+        // 3. Lógica para CONFIRMAR ADOPCIÓN FINAL
+        function confirmarAdopcionFinal(id, mascotaNombre) {
+            Swal.fire({
+                title: '<strong>¡FINALIZAR ADOPCIÓN!</strong>',
+                icon: 'success',
+                html: `¿Confirmas que <b>${mascotaNombre}</b> ya fue entregado a su nuevo hogar?<br><br>` +
+                      `<small class="text-muted">Esta acción marcará a la mascota como adoptada y limpiará las solicitudes pendientes.</small>`,
+                showCancelButton: true,
+                confirmButtonColor: '#5CA9DD',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-heart"></i> ¡Sí, ya fue adoptado!',
+                cancelButtonText: 'Aún no',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Celebrando...', didOpen: () => Swal.showLoading() });
+
+                    $.ajax({
+                        url: '@Url.Action("ConfirmarAdopcionFinal", "SolicitudesAdopcions")',
+                        type: 'POST',
+                        data: { idSolicitud: id },
+                        success: function (res) {
+                            if (res.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Misión Cumplida!',
+                                    text: res.message,
+                                    confirmButtonColor: '#5CA9DD'
+                                }).then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', res.message, 'error');
+                            }
+                        },
+                        error: () => Swal.fire('Error', 'No se pudo procesar la adopción', 'error')
+                    });
+                }
+            });
+        }
+    </script>
+}

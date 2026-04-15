@@ -1,0 +1,61 @@
+﻿using Xunit;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+// 🔴 IMPORTANTE: usa tu namespace real
+using PETADOPCION_FINAL.Controllers;
+using PETADOPCION_FINAL.Models; // cambia a .Data si tu contexto está ahí
+
+public class SolicitudesAdopcionesControllerTests
+{
+// 🔹 Base de datos en memoria
+private PetadopcionContext GetDbContext()
+{
+var options = new DbContextOptionsBuilder<PetadopcionContext>
+	()
+	.UseInMemoryDatabase("TestDB")
+	.Options;
+
+	return new PetadopcionContext(options);
+	}
+
+	// 🔹 Configuración falsa
+	private IConfiguration GetConfiguration()
+	{
+	return new ConfigurationBuilder()
+	.AddInMemoryCollection(new Dictionary<string, string="">
+		())
+		.Build();
+		}
+
+		[Fact]
+		public async Task Index_SinSesion_RedireccionaAHome()
+		{
+		// Arrange
+		var context = GetDbContext();
+		var configuration = GetConfiguration();
+
+		var controller = new SolicitudesAdopcionesController(context, configuration);
+
+		// Simular HttpContext sin sesión
+		var httpContext = new DefaultHttpContext();
+		httpContext.Session = new DummySession();
+
+		controller.ControllerContext = new ControllerContext()
+		{
+		HttpContext = httpContext
+		};
+
+		// Act
+		var result = await controller.Index();
+
+		// Assert
+		var redirect = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Equal("Index", redirect.ActionName);
+        Assert.Equal("Home", redirect.ControllerName);
+    }
+}

@@ -1,0 +1,116 @@
+﻿@{
+    Layout = null;
+    var correo = ViewBag.Correo;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Nueva Contraseña - PetParadise</title>
+</head>
+<body class="bg-gradient-to-br from-[#2F5975] via-slate-800 to-slate-900 min-h-screen flex items-center justify-center p-6">
+
+    <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-2xl w-full max-w-md text-white font-sans">
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-black uppercase tracking-tighter">Nueva Contraseña</h2>
+            <p class="text-blue-200 text-[10px] font-bold uppercase tracking-widest mt-2 italic">Usuario: @correo</p>
+        </div>
+
+        <form asp-action="ActualizarPassword" method="post" id="resetForm" class="space-y-5">
+            <input type="hidden" name="correo" value="@correo" />
+
+            <div class="relative">
+                <label class="block text-[10px] font-black uppercase text-blue-200 mb-2 ml-1">Contraseña Nueva</label>
+                <div class="relative">
+                    <input type="password" id="pass" name="nuevaPassword" required
+                           class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 outline-none transition font-bold pr-12 focus:ring-2 focus:ring-blue-400" />
+                    <button type="button" onclick="toggleView('pass', 'eye1')" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition">
+                        <span id="eye1" class="material-icons text-xl">visibility_off</span>
+                    </button>
+                </div>
+                <p class="text-[9px] text-blue-300/50 mt-1 ml-1 uppercase font-bold tracking-tighter">
+                    Usa: Mayúscula, Minúscula, Número y un símbolo (# . $ *)
+                </p>
+            </div>
+
+            <div class="relative">
+                <label class="block text-[10px] font-black uppercase text-blue-200 mb-2 ml-1">Confirmar Contraseña</label>
+                <div class="relative">
+                    <input type="password" id="confirm" required
+                           class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 outline-none transition font-bold pr-12 focus:ring-2 focus:ring-blue-400" />
+                    <button type="button" onclick="toggleView('confirm', 'eye2')" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition">
+                        <span id="eye2" class="material-icons text-xl">visibility_off</span>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-black uppercase text-[11px] tracking-[0.2em] shadow-lg transition transform active:scale-95 mt-4">
+                ACTUALIZAR CONTRASEÑA
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function toggleView(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.innerText = "visibility";
+            } else {
+                input.type = "password";
+                icon.innerText = "visibility_off";
+            }
+        }
+
+        document.getElementById('resetForm').onsubmit = function(e) {
+            e.preventDefault();
+
+            const p1 = document.getElementById('pass').value;
+            const p2 = document.getElementById('confirm').value;
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#.$%^&+=!*]).{8,}$/;
+
+            if (p1 !== p2) {
+                Swal.fire({ icon: 'error', title: '¡ERROR!', text: 'Las contraseñas no coinciden.', confirmButtonColor: '#ef4444', background: '#1e293b', color: '#fff' });
+                return;
+            }
+
+            if (!regex.test(p1)) {
+                Swal.fire({ icon: 'warning', title: 'CONTRASEÑA DÉBIL', text: 'Debe tener mínimo 8 caracteres, una mayúscula, un número y un símbolo.', confirmButtonColor: '#2F5975', background: '#1e293b', color: '#fff' });
+                return;
+            }
+
+            // Muestra el éxito y LUEGO envía los datos
+            Swal.fire({
+                icon: 'success',
+                title: '¡CAMBIO EXITOSO!',
+                text: 'Tu contraseña ha sido actualizada. Ahora inicia sesión.',
+                confirmButtonColor: '#10b981',
+                confirmButtonText: 'ACEPTAR',
+                background: '#1e293b',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Envío por fetch para que no se recargue la página a lo loco
+                    const formData = new FormData(this);
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => {
+                        if (response.ok) {
+                            // Si el controlador guardó bien (return Ok()), mandamos al Login
+                            window.location.href = "/Home/Index";
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'ERROR', text: 'No se pudo guardar en la base de datos.', background: '#1e293b', color: '#fff' });
+                        }
+                    });
+                }
+            });
+        };
+    </script>
+</body>
+</html>

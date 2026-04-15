@@ -1,0 +1,59 @@
+﻿@{
+    // Usa un layout vacío para que la página de error sea de pantalla completa
+    Layout = null;
+    ViewData["Title"] = "Error 404/400";
+}
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error 400 - PetAdopta</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .shadow-text {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-[#2b5773] flex items-center justify-center min-h-screen">
+
+    <div class="bg-white w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded-xl shadow-2xl p-10 border-4 border-[#163d52] text-center">
+
+        <!-- Imagen del perrito con el cartel -->
+        <div class="flex justify-center mb-6">
+            <div class="relative">
+                <img src="/asset/error400.png"
+                     alt="Perrito Error"
+                     class="w-64 h-64 object-cover rounded-full mx-auto shadow-lg">
+
+              
+            </div>
+        </div>
+
+        <!-- Texto estilo caricatura -->
+        <p class="text-2xl md:text-3xl font-bold text-[#1a4d63] shadow-text">
+            ¡Ups! Algo salió mal con tu solicitud.
+        </p>
+
+        <p class="mt-3 text-xl md:text-2xl text-[#1a4d63] shadow-text">
+            Parece que la petición fue inválida o se envió de forma incorrecta.
+        </p>
+
+        <!-- Botón regresar a inicio -->
+        <div class="mt-6">
+            <a href="/"
+               class="text-2xl font-bold text-blue-700 hover:text-blue-900 underline">
+                Click para ir al Inicio
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

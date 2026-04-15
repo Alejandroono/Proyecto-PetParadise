@@ -1,0 +1,140 @@
+﻿@model IEnumerable<PETADOPCION_FINAL.Models.Mascota>
+
+@{
+    ViewData["Title"] = "Mis Mascotas Publicadas";
+}
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary"><span class="material-icons">inventory</span> Mis Publicaciones</h1>
+        <a asp-action="Create" class="btn btn-success shadow-sm d-flex align-items-center gap-2">
+            <span class="material-icons">add</span> Publicar Nueva Mascota
+        </a>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="px-3">Foto</th>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Tipo / Raza</th>
+                        <th>Sexo</th>
+                        <th>Salud</th>
+                        <th>Ubicación</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="px-3">
+                                @if (item.MascotaFotos != null && item.MascotaFotos.Any())
+                                {
+                                    <img src="@item.MascotaFotos.FirstOrDefault(f => f.EsPrincipal == true)?.UrlFoto"
+                                         class="rounded shadow-sm"
+                                         style="width: 60px; height: 60px; object-fit: cover;"
+                                         alt="Foto Mascota" />
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary text-white rounded d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                        <span class="material-icons">image</span>
+                                    </div>
+                                }
+                            </td>
+                            <td class="fw-bold">@item.Nombre</td>
+                            <td>
+                                @{
+                                    int totalDias = item.Edad ?? 0;
+                                    int anos = totalDias / 365;
+                                    int meses = (totalDias % 365) / 30;
+                                    int dias = (totalDias % 365) % 30;
+
+                                    List<string> partes = new List<string>();
+                                    if (anos > 0) partes.Add($"{anos} " + (anos == 1 ? "Año" : "Años"));
+                                    if (meses > 0) partes.Add($"{meses} " + (meses == 1 ? "Mes" : "Meses"));
+                                    if (dias > 0 || partes.Count == 0) partes.Add($"{dias} " + (dias == 1 ? "Día" : "Días"));
+
+                                    @string.Join(", ", partes)
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-info text-dark">@item.Tipo</span><br />
+                                <small class="text-muted">@item.Raza</small>
+                            </td>
+                            <td>@item.Sexo</td>
+                            <td>
+                                <small title="@item.EstadoSalud">
+                                    @(item.EstadoSalud?.Length > 20 ? item.EstadoSalud.Substring(0, 17) + "..." : item.EstadoSalud)
+                                </small>
+                            </td>
+                            <td>@item.Ubicacion</td>
+                            <td>
+                                <span class="badge @(item.EstadoAdopcion == "Disponible" ? "bg-success" : "bg-warning")">
+                                    @item.EstadoAdopcion
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+
+                            @if (item.EstadoAdopcion != "Adoptado")
+                                {
+                                   
+                                        <a asp-action="Edit" asp-route-id="@item.IdMascota"
+                                        class="text-warning border-0 bg-transparent p-1 d-inline-flex align-items-center"
+                                        title="Editar Publicación">
+                                            <span class="material-icons">edit</span>
+                                        </a>
+                                     }
+                                        <a asp-action="Details" asp-route-id="@item.IdMascota"
+                                        class="text-primary border-0 bg-transparent p-1 d-inline-flex align-items-center"
+                                        title="Ver Detalles">
+                                            <span class="material-icons">visibility</span>
+                                        </a>
+                                   @if (item.EstadoAdopcion != "Adoptado")
+                               {
+                                        <a asp-action="Delete" asp-route-id="@item.IdMascota"
+                                        class="text-danger border-0 bg-transparent p-1 d-inline-flex align-items-center"
+                                        title="Eliminar">
+                                            <span class="material-icons" style="color: #dc3545;">delete</span>
+                                        </a>
+                               }
+                                    </div>
+                                
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: #555;
+    }
+
+    .table td {
+        font-size: 0.9rem;
+    }
+
+    .material-icons {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+        .material-icons:hover {
+            transform: scale(1.2);
+        }
+</style>

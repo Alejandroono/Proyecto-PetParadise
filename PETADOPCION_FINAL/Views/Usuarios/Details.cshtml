@@ -1,0 +1,133 @@
+﻿@model PETADOPCION_FINAL.Models.Usuario
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+   
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Detalles - PetParadise</title>
+</head>
+
+<body class="bg-slate-50 min-h-screen font-sans antialiased">
+
+    @* Encabezado con tu color original #2F5975 *@
+    <header class="bg-[#2F5975] shadow-lg text-white p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span class="text-xl font-bold tracking-widest flex items-center gap-2">
+                <span class="material-icons">visibility</span> INFORMACIÓN COMPLETA
+            </span>
+            <a asp-action="Index" class="hover:text-blue-200 text-sm font-bold uppercase flex items-center gap-1">
+                <span class="material-icons text-sm">arrow_back</span> VOLVER AL LISTADO
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto py-12 px-6">
+
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+
+            @* Banner Superior *@
+            <div class="bg-[#2F5975] p-8 text-white flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-extrabold uppercase leading-none">@Model.Nombre @Model.Apellido</h2>
+                    <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mt-2">PERFIL DETALLADO DE USUARIO</p>
+                </div>
+                <div class="bg-white/10 p-3 rounded-full">
+                    <span class="material-icons text-4xl">account_box</span>
+                </div>
+            </div>
+
+            <div class="p-8 md:p-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+                    @* SECCIÓN 1: DATOS PERSONALES *@
+                    <div class="space-y-6">
+                        <h3 class="text-[#2F5975] font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <span class="material-icons text-sm">person</span> DATOS PERSONALES
+                        </h3>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">NOMBRE COMPLETO</p>
+                                <p class="text-slate-700 font-bold text-lg">@Model.Nombre @Model.Apellido</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">CORREO ELECTRÓNICO</p>
+                                <p class="text-slate-700 font-bold">@Model.Email</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">TELÉFONO MÓVIL</p>
+                                <p class="text-slate-700 font-bold">@Model.Telefono</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* SECCIÓN 2: CUENTA Y ROL *@
+                    <div class="space-y-6">
+                        <h3 class="text-[#2F5975] font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <span class="material-icons text-sm">verified_user</span> SEGURIDAD Y ROL
+                        </h3>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">ROL EN EL SISTEMA</p>
+                                <span class="inline-block mt-1 bg-blue-100 text-[#2F5975] px-4 py-1 rounded-full text-xs font-black border border-blue-200 uppercase">
+                                    @Model.IdRolNavigation?.NombreRol
+                                </span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">FECHA DE REGISTRO</p>
+                                <p class="text-slate-700 font-bold">
+                                    @string.Format("{0:dd 'de' MMMM 'de' yyyy}", Model.FechaRegistro)
+                                </p>
+                            </div>
+                         
+                        </div>
+                    </div>
+
+                    @* SECCIÓN 3: UBICACIÓN (Ancho completo) *@
+                    <div class="md:col-span-2 space-y-6 bg-slate-50 p-6 rounded-2xl border border-dashed border-slate-200">
+                        <h3 class="text-[#2F5975] font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 border-b border-slate-200 pb-2">
+                            <span class="material-icons text-sm">location_on</span> UBICACIÓN REGISTRADA
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">DIRECCIÓN DE RESIDENCIA</p>
+                                <p class="text-slate-700 font-medium italic">@Model.Direccion</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">CIUDAD</p>
+                                <p class="text-slate-700 font-bold">@Model.Ciudad</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* BOTONES DE ACCIÓN *@
+                <div class="mt-12 flex flex-col md:flex-row gap-4 pt-8 border-t border-slate-100">
+                    <a asp-action="Edit" asp-route-id="@Model.IdUsuario"
+                       class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                        <span class="material-icons">edit</span> EDITAR INFORMACIÓN
+                    </a>
+                    <a asp-action="Index"
+                       class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-4 rounded-xl transition-all text-center uppercase tracking-widest text-sm flex items-center justify-center">
+                        VOLVER
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-slate-400 text-[10px] font-bold uppercase tracking-[0.4em] mt-8 opacity-50">
+            PETPARADISE ADMINISTRACIÓN // 2026
+        </p>
+    </main>
+
+</body>
+</html>

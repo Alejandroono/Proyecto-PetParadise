@@ -1,0 +1,72 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Error 500</title>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #2f5f78;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            background: white;
+            width: 80%;
+            margin: 40px auto;
+            padding: 40px;
+            border: 8px solid #2f5f78;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .image img {
+            width: 330px;
+        }
+
+        .text {
+            font-size: 28px;
+            color: #25506d;
+            text-shadow: 2px 2px 4px #ccc;
+            line-height: 1.4;
+        }
+
+            .text a {
+                font-weight: bold;
+                color: #004a87;
+                text-decoration: none;
+            }
+
+                .text a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- IMAGEN -->
+        <div class="image">
+            <img src="~/asset/error500.png" alt="Error 500">
+        </div>
+
+        <!-- TEXTO -->
+        <div class="text">
+            ¡Vaya! Parece que nuestros servidores se tomaron un descanso inesperado.
+            Ya los estamos buscando para que vuelvan a trabajar.
+            Intenta recargar la página en un momento.
+            <br><br>
+            <a href="/Home/Index">Click para ir al Inicio</a>
+        </div>
+
+    </div>
+</body>
+</html>

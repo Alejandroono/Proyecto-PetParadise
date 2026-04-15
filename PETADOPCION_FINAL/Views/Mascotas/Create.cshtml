@@ -1,0 +1,122 @@
+﻿@model PETADOPCION_FINAL.Models.Mascota
+
+@{
+    ViewData["Title"] = "Publicar Mascota";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white p-3">
+            <h4 class="mb-0"><i class="fas fa-paw"></i> Publicar Nueva Mascota</h4>
+            <small>La información del publicador se asignará automáticamente a tu perfil.</small>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-7 border-end">
+                        <h5 class="text-primary mb-3">Detalles de la Mascota</h5>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Nombre" class="form-label fw-bold"></label>
+                            <input asp-for="Nombre" class="form-control" placeholder="Nombre de la mascota" required />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Tipo" class="form-label fw-bold"></label>
+                                <select asp-for="Tipo" class="form-select" required>
+                                    <option value="">Seleccione tipo</option>
+                                    <option value="Perro">Perro</option>
+                                    <option value="Gato">Gato</option>
+                                 
+                                </select>
+                                <span asp-validation-for="Tipo" class="text-red-600 text-xs font-bold mt-1"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Sexo" class="form-label fw-bold"></label>
+                                <select asp-for="Sexo" class="form-select" required>
+                                    <option value="">Seleccione sexo</option>
+                                    <option value="Macho">Macho</option>
+                                    <option value="Hembra">Hembra</option>
+                                </select>
+                                <span asp-validation-for="Sexo" class="text-red-600 text-xs font-bold mt-1"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3 p-3 bg-light rounded border">
+                            <label class="form-label fw-bold d-block mb-2"><i class="fas fa-history"></i> Edad Detallada</label>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <label class="small fw-bold">Años:</label>
+                                    <input type="number" name="edadAnos" class="form-control" value="0" min="0" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="small fw-bold">Meses:</label>
+                                    <input type="number" name="edadMeses" class="form-control" value="0" min="0" max="11" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="small fw-bold">Días:</label>
+                                    <input type="number" name="edadDias" class="form-control" value="0" min="0" max="30" />
+                                </div>
+                            </div>
+                       </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Raza" class="form-label fw-bold"></label>
+                            <input asp-for="Raza" class="form-control" placeholder="Raza o cruce" />
+                            <span asp-validation-for="Raza" class="text-red-600 text-xs font-bold mt-1"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Ubicacion" class="form-label fw-bold"></label>
+                            <input asp-for="Ubicacion" class="form-control" placeholder="Ciudad o Sector donde se encuentra" required />
+                            <span asp-validation-for="Ubicacion" class="text-red-600 text-xs font-bold mt-1"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="EstadoSalud" class="form-label fw-bold">Estado de Salud</label>
+                            <input asp-for="EstadoSalud" class="form-control" placeholder="Ej: Vacunado, desparasitado, con todas sus vacunas" />
+                            <span asp-validation-for="EstadoSalud" class="text-red-600 text-xs font-bold mt-1"></span>
+ </div>
+                    </div>
+
+                    <div class="col-md-5 ps-4">
+                        <h5 class="text-primary mb-3">Multimedia y Descripción</h5>
+
+                        <div class="card border-primary mb-4 bg-light shadow-sm">
+                            <div class="card-body">
+                                <label class="form-label fw-bold"><i class="fas fa-image"></i> Foto de Portada</label>
+                                <input type="file" name="imagenMascota" class="form-control" accept="image/*" required />
+                               
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Descripcion" class="form-label fw-bold">Descripción / Historia</label>
+                            <textarea asp-for="Descripcion" class="form-control" rows="8" placeholder="Cuéntanos sobre su comportamiento, necesidades..."></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mt-4" />
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-primary btn-lg px-5 shadow">
+                        <i class="fas fa-save"></i> Publicar Mascota
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,136 @@
+﻿@model PETADOPCION_FINAL.Models.Usuario
+
+@{
+    ViewData["Title"] = "Editar Usuario";
+ 
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Editar Usuario - PetParadise</title>
+</head>
+
+<body class="bg-slate-50 min-h-screen font-sans antialiased">
+
+    @* Encabezado con tu color original #2F5975 *@
+    <header class="bg-[#2F5975] shadow-lg text-white p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span class="text-xl font-bold tracking-widest flex items-center gap-2">
+                <span class="material-icons">edit</span> GESTIÓN DE PERFIL
+            </span>
+            <a asp-action="Index" class="hover:text-blue-200 text-sm font-bold uppercase flex items-center gap-1">
+                <span class="material-icons text-sm">arrow_back</span> VOLVER AL LISTADO
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto py-12 px-6">
+
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+            @* Título en español y con color de tu gama *@
+            <div class="bg-[#2F5975] p-8 text-white">
+                <h2 class="text-2xl font-extrabold tracking-tighter uppercase leading-none">MODIFICAR INFORMACIÓN DE USUARIO</h2>
+                <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mt-2">Panel Administrativo PetParadise</p>
+            </div>
+
+            <form asp-action="Edit" class="p-8 md:p-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-6 bg-red-50 p-4 rounded-xl text-sm font-bold border-l-4 border-red-500"></div>
+
+                @* Campos Ocultos *@
+                <input type="hidden" asp-for="IdUsuario" />
+                <input type="hidden" asp-for="PasswordHash" />
+                <input type="hidden" asp-for="Estado" />
+                <input type="hidden" asp-for="FechaRegistro" />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+                    @* SECCIÓN 1: IDENTIDAD *@
+                    <div class="space-y-6">
+                        <h3 class="text-[#2F5975] font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <span class="material-icons text-sm">person</span> DATOS PERSONALES
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label asp-for="Nombre" class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">NOMBRE</label>
+                                <input asp-for="Nombre" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2F5975] outline-none transition-all font-bold text-slate-700" />
+                                <span asp-validation-for="Nombre" class="text-danger text-[10px]"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Apellido" class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">APELLIDO</label>
+                                <input asp-for="Apellido" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2F5975] outline-none transition-all font-bold text-slate-700" />
+                                <span asp-validation-for="Apellido" class="text-danger text-[10px]"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label asp-for="Telefono" class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">TELÉFONO MÓVIL</label>
+                            <input asp-for="Telefono" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2F5975] outline-none transition-all font-bold text-slate-700" />
+                            <span asp-validation-for="Telefono" class="text-danger text-[10px]"></span>
+                        </div>
+                    </div>
+
+                    @* SECCIÓN 2: ROL Y CUENTA *@
+                    <div class="space-y-6">
+                        <h3 class="text-[#2F5975] font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <span class="material-icons text-sm">verified_user</span> PRIVILEGIOS Y CUENTA
+                        </h3>
+
+                        <div>
+                            <label asp-for="IdRol" class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">ROL ASIGNADO (NOMBRE DEL ROL)</label>
+                            @* El select mostrará los nombres de los roles *@
+                            <select asp-for="IdRol" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2F5975] outline-none transition-all font-bold text-[#2F5975] cursor-pointer" asp-items="ViewBag.IdRol"></select>
+                        </div>
+
+                        <div>
+                            <label asp-for="Email" class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">CORREO ELECTRÓNICO</label>
+                            <input asp-for="Email" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2F5975] outline-none transition-all font-bold text-slate-700" />
+                            <span asp-validation-for="Email" class="text-danger text-[10px]"></span>
+                        </div>
+                    </div>
+
+                    @* SECCIÓN 3: UBICACIÓN *@
+                    <div class="md:col-span-2 space-y-6">
+                        <h3 class="text-[#2F5975] font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 border-b border-slate-100 pb-2">
+                            <span class="material-icons text-sm">location_on</span> UBICACIÓN REGISTRADA
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-2">
+                                <label asp-for="Direccion" class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">DIRECCIÓN DE RESIDENCIA</label>
+                                <input asp-for="Direccion" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2F5975] outline-none transition-all font-medium text-slate-700" />
+                                <span asp-validation-for="Direccion" class="text-red-500 text-[10px] font-bold mt-1 ml-1 block"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Ciudad" class="block text-[10px] font-bold text-slate-400 uppercase mb-1 ml-1">CIUDAD</label>
+                                <input asp-for="Ciudad" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#2F5975] outline-none transition-all font-medium text-slate-700" />
+                                <span asp-validation-for="Ciudad" class="text-red-500 text-[10px] font-bold mt-1 ml-1 block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Botones de Acción *@
+                <div class="mt-12 flex flex-col md:flex-row gap-4">
+                    <button type="submit" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+                        <span class="material-icons">save</span> GUARDAR CAMBIOS
+                    </button>
+                    <a asp-action="Index" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold py-4 rounded-xl transition-all text-center uppercase tracking-widest text-sm flex items-center justify-center">
+                        CANCELAR
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</body>
+</html>

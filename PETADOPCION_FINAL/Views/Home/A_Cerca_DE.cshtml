@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "¿Quiénes Somos?";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>PetParadise – ¿Quiénes Somos?</title>
+</head>
+
+<body class="bg-gradient-to-r from-blue-500 via-slate-700 to-blue-800 min-h-screen flex flex-col text-white">
+
+    <!-- NAVBAR -->
+    <header class="backdrop-blur-lg bg-white/10 border-b border-white/20 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex items-center justify-between py-4 px-6">
+
+            <div class="flex items-center space-x-3">
+                <img src="/asset/imagen.png" class="h-14" />
+                <span class="text-2xl font-bold tracking-wide">PETPARADISE</span>
+            </div>
+
+            <nav class="flex items-center space-x-6">
+
+
+
+
+                <button type="button"
+                        onclick="location.href='@Url.Action("Index", "Home")'"
+                        class="px-4 py-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition">
+                    Inicio
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <main class="flex-grow bg-white text-gray-800">
+        <div class="max-w-5xl mx-auto px-6 py-16">
+
+            <!-- TITULO -->
+            <div class="text-center mb-14">
+                <h1 class="text-4xl font-extrabold text-[#2F5975] mb-4">
+                    ¿Quiénes somos?
+                </h1>
+                <p class="text-gray-600 text-lg">
+                    Conoce la historia y el propósito detrás de PetParadise
+                </p>
+            </div>
+
+            <!-- HISTORIA -->
+            <section class="mb-16">
+                <h2 class="text-2xl font-bold text-[#396580] mb-4">
+                    Nuestra historia
+                </h2>
+                <div class="bg-gray-100 p-6 rounded-lg">
+                    <p class="text-gray-600 leading-relaxed">
+                        PetParadise nace como una iniciativa que busca mejorar la vida de las mascotas
+                        y fortalecer el vínculo entre ellas y las personas. Somos una empresa en sus
+                        primeros pasos, impulsada por el amor hacia los animales.
+                    </p>
+                </div>
+            </section>
+
+            <!-- MISION Y VISION -->
+            <section class="grid md:grid-cols-2 gap-10 mb-16">
+
+                <div class="bg-gray-100 rounded-lg p-6 shadow-sm">
+                    <h3 class="text-xl font-bold text-[#2F5975] mb-3">
+                        Nuestra misión
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Facilitar la adopción responsable de mascotas y conectar a las personas
+                        interesadas en adoptar, promoviendo el bienestar animal.
+                    </p>
+                </div>
+
+                <div class="bg-gray-100 rounded-lg p-6 shadow-sm">
+                    <h3 class="text-xl font-bold text-[#2F5975] mb-3">
+                        Nuestra visión
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Convertirnos en una plataforma líder en el cuidado y adopción de mascotas,
+                        generando impacto positivo en la sociedad.
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- VALORES -->
+            <section>
+                <h2 class="text-2xl font-bold text-[#396580] mb-6">
+                    Nuestros valores
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-6">
+
+                    <div class="border rounded-lg p-6 text-center">
+                        <h4 class="font-bold text-[#2F5975] mb-2">Compromiso</h4>
+                        <p class="text-gray-700 text-sm">
+                            Garantizamos el bienestar de cada mascota.
+                        </p>
+                    </div>
+
+                    <div class="border rounded-lg p-6 text-center">
+                        <h4 class="font-bold text-[#2F5975] mb-2">Empatía</h4>
+                        <p class="text-gray-700 text-sm">
+                            Entendemos las necesidades de los animales y las personas.
+                        </p>
+                    </div>
+
+                    <div class="border rounded-lg p-6 text-center">
+                        <h4 class="font-bold text-[#2F5975] mb-2">Confianza</h4>
+                        <p class="text-gray-700 text-sm">
+                            Transparencia y seguridad en cada proceso.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#2F5975] text-white text-center py-4">
+        <p class="text-sm">
+            © 2025 PetParadise · Cuidando mascotas, creando hogares
+        </p>
+    </footer>
+
+    <!-- MODAL LOGIN -->
+    <div id="modalLogin"
+         class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50"
+         onclick="cerrarLogin()">
+
+        <div onclick="event.stopPropagation()"
+             class="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-10 w-full max-w-lg relative">
+
+            <button type="button"
+                    onclick="cerrarLogin()"
+                    class="absolute top-4 right-4 text-gray-600 hover:text-black text-xl">
+                ✕
+            </button>
+
+            <div class="flex flex-col items-center mb-6">
+                <img src="/asset/imagen.png" class="h-20 opacity-90">
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md text-gray-800">
+
+                <h2 class="text-2xl font-bold text-center mb-6 text-[#2F5975]">
+                    Iniciar sesión
+                </h2>
+
+                <form asp-controller="Home" asp-action="Index" method="post">
+
+                    <label class="block font-semibold mb-1">Usuario</label>
+                    <input name="Correo" type="text"
+                           class="w-full border rounded-md px-4 py-2 mb-4 focus:ring-2 focus:ring-blue-400"
+                           placeholder="Ejemplo@gmail.com" />
+
+                    <label class="block font-semibold mb-1">Contraseña</label>
+                    <input name="Contrasena" type="password"
+                           class="w-full border rounded-md px-4 py-2 mb-4 focus:ring-2 focus:ring-blue-400"
+                           placeholder="Ingrese su contraseña" />
+
+                    <button type="submit"
+                            class="w-full bg-[#2F5975] text-white py-2 rounded-md hover:opacity-90 transition">
+                        Ingresar
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- SCRIPT -->
+        <script>
+            function abrirLogin() {
+                document.getElementById("modalLogin").classList.remove("hidden");
+                document.getElementById("modalLogin").classList.add("flex");
+            }
+
+            function cerrarLogin() {
+                document.getElementById("modalLogin").classList.add("hidden");
+                document.getElementById("modalLogin").classList.remove("flex");
+            }
+        </script>
+
+</body>
+</html>
